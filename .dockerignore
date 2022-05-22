@@ -2,3 +2,6 @@
 .git
 docker-compose.yml
 .dockerignore
+
+/mysql
+/wordpress
