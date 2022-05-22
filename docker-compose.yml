@@ -1,0 +1,36 @@
+version: '3.8'
+
+networks:
+  app-network:
+
+volumes:
+  app-data:
+  wordpress:
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: db
+    env_file: .env
+    environment:
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+    volumes: 
+      - app-data:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - app-network
+  
+  wordpress:
+    image: wordpress:5.9.3-php8.1-fpm-alpine
+    container_name: wordpress
+    env_file: .env
+    environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=$MYSQL_DATABASE
+    volumes: 
+      - wordpress:/var/www/html
+    networks:
+      - app-network
+    
